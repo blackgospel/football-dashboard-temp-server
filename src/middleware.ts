@@ -13,11 +13,6 @@ const loggerOptions: expressWinston.LoggerOptions = {
 }
 
 export const middleware = [
-  // session({
-  //   secret: JWT_SECRET_KEY,
-  //   resave: true,
-  //   saveUninitialized: true,
-  // }),
   bodyParser.json(),
   bodyParser.urlencoded({ extended: true }),
   function (req: Request, res: Response, next: NextFunction) {
