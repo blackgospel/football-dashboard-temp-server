@@ -47,6 +47,6 @@ export class Db {
   }
 
   public remove(key: keyof Data, id: string) {
-    return this.getConnection().get(`${key}.data`, []).removeById(id).write()
+    return this.getConnection().get(key).removeById(id).write()
   }
 }
