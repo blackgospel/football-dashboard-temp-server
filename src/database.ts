@@ -2,7 +2,7 @@ import lodashId from 'lodash-id'
 import Lowdb, { LowdbSync } from 'lowdb'
 import FileSync from 'lowdb/adapters/FileSync'
 import path from 'path'
-import { Data } from './types/entity'
+import { Data, InnerData } from './types/entity'
 
 export class Db {
   public db: LowdbSync<Data>
@@ -22,15 +22,15 @@ export class Db {
     return this.db
   }
 
-  public all(key: keyof Data) {
+  public all<T extends keyof Data>(key: T) {
     return this.getConnection().get(key).value()
   }
 
-  public get(key: keyof Data, id: string) {
+  public get<T extends keyof Data>(key: T, id: string) {
     return this.getConnection().get(key).getById(id).value()
   }
 
-  public insert<T extends unknown>(key: keyof Data, data: T) {
+  public insert<T extends keyof Data, K extends InnerData<T>>(key: T, data: K) {
     this.getConnection()
       .get(key)
       .insert(data as any)
@@ -38,15 +38,16 @@ export class Db {
     return data
   }
 
-  public update<T extends unknown>(key: keyof Data, id: string, partial: T) {
-    this.getConnection()
-      .get(key)
-      .updateById(id, partial as any)
-      .write()
-    return this.get(key, id) as T
+  public update<T extends keyof Data, K extends InnerData<T>>(
+    key: T,
+    id: string,
+    partial: Partial<K>
+  ) {
+    this.getConnection().get(key).updateById(id, partial).write()
+    return this.get(key, id)
   }
 
-  public remove(key: keyof Data, id: string) {
+  public remove<T extends keyof Data>(key: T, id: string) {
     return this.getConnection().get(key).removeById(id).write()
   }
 }

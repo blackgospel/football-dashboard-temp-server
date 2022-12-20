@@ -1,0 +1,7 @@
+export * from './matches.controller'
+export * from './matches.dao'
+export * from './matches.dto'
+export * from './matches.middleware'
+export * from './matches.model'
+export * from './matches.router'
+export * from './matches.service'

@@ -1,21 +1,27 @@
 import { faker } from '@faker-js/faker'
 import debug from 'debug'
 import { Db } from '../../database'
-import { CreateGeneratedUserDto, PatchUserDto, PutUserDto } from './users.dto'
+import {
+  CreateGeneratedUserDto,
+  CreateUserDto,
+  PatchUserDto,
+  PutUserDto,
+} from './users.dto'
 import { UserSchema } from './users.model'
 
 const log: debug.IDebugger = debug('app:users-dao')
 
 class UsersDao {
   private db: Db = new Db()
+  private dbKey: 'users' = 'users'
 
   constructor() {
     log('Created new instance of UsersService')
   }
 
-  private generateUser(userFields?: CreateGeneratedUserDto) {
+  private createRandomUser(userFields?: CreateGeneratedUserDto) {
     const userId = faker.datatype.uuid()
-    const avatar = faker.datatype.uuid()
+    const avatar = faker.image.avatar()
     const firstName = faker.name.firstName()
     const lastName = faker.name.lastName()
     const email = faker.internet.email(firstName, lastName)
@@ -30,42 +36,60 @@ class UsersDao {
       password: 'password',
     }
 
-    return [userId, user]
+    return [userId, user] as const
   }
 
-  addUser(userFields: CreateGeneratedUserDto) {
-    const [userId, user] = this.generateUser(userFields)
+  generateUser() {
+    const [userId, user] = this.createRandomUser()
 
-    this.db.insert('users', user)
+    this.db.insert(this.dbKey, user)
+
+    return userId
+  }
+
+  addUser(userFields: CreateUserDto) {
+    const [userId, { avatar, firstName, lastName }] =
+      this.createRandomUser(userFields)
+
+    this.db.insert(this.dbKey, {
+      id: userId,
+      avatar,
+      firstName,
+      lastName,
+      ...userFields,
+    })
 
     return userId
   }
 
   getUserByEmail(email: string) {
-    return this.db.getConnection().get('users').find({ email }).value()
+    return this.db.getConnection().get(this.dbKey).find({ email }).value()
   }
 
   getUserByEmailWithPassword(email: string) {
-    const user = this.db.getConnection().get('users').find({ email }).value()
+    const user = this.db.getConnection().get(this.dbKey).find({ email }).value()
 
     return user
   }
 
   removeUserById(userId: string) {
-    return this.db.remove('users', userId)
+    this.db.remove(this.dbKey, userId)
+
+    return userId
   }
 
   getUserById(userId: string) {
-    return this.db.get('users', userId)
+    return this.db.get(this.dbKey, userId)
   }
 
   getUsers() {
-    return this.db.all('users')
+    return this.db.all(this.dbKey)
   }
 
   updateUserById(userId: string, userFields: PatchUserDto | PutUserDto) {
-    const user = this.db.update('users', userId, userFields)
-    return (user as UserSchema).id
+    this.db.update(this.dbKey, userId, userFields)
+
+    return userId
   }
 }
 

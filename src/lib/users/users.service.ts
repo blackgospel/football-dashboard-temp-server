@@ -3,8 +3,10 @@ import UsersDao from './users.dao'
 import { CreateUserDto, PatchUserDto, PutUserDto } from './users.dto'
 
 class UsersService implements CRUD {
-  async create(resource: CreateUserDto) {
-    return UsersDao.addUser(resource)
+  async create(_resource: CreateUserDto) {
+    /** When in prod change this to addUser */
+    // return UsersDao.addUser(resource)
+    return UsersDao.generateUser()
   }
 
   async deleteById(id: string) {

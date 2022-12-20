@@ -1,0 +1,7 @@
+export * from './tournaments.controller'
+export * from './tournaments.dao'
+export * from './tournaments.dto'
+export * from './tournaments.middleware'
+export * from './tournaments.model'
+export * from './tournaments.router'
+export * from './tournaments.service'
