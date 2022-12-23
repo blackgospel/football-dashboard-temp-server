@@ -1,4 +1,5 @@
 import bodyParser from 'body-parser'
+import cors from 'cors'
 import { NextFunction, Request, Response } from 'express'
 import * as expressWinston from 'express-winston'
 import * as winston from 'winston'
@@ -13,6 +14,7 @@ const loggerOptions: expressWinston.LoggerOptions = {
 }
 
 export const middleware = [
+  cors(),
   bodyParser.json(),
   bodyParser.urlencoded({ extended: true }),
   function (req: Request, res: Response, next: NextFunction) {

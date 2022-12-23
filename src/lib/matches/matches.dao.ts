@@ -26,10 +26,6 @@ class MatchesDao {
       teams as TeamsSchema
     )
 
-    console.log({
-      test: generatedMatches,
-    })
-
     this.db
       .getConnection()
       .get('matches')

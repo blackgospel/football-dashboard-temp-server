@@ -82,9 +82,9 @@ const generateMatch = ({
   return {
     id: faker.datatype.uuid(),
     startTimestamp: new Date(faker.date.soon(0)).getTime(),
-    tournamentId: tournament.id,
-    homeTeamId: home.id,
-    awayTeamId: away.id,
+    tournament,
+    homeTeam: home,
+    awayTeam: away,
     recentGames: [
       generateTeamPreviousStats(home, teams, tournament),
       generateTeamPreviousStats(away, teams, tournament),
@@ -97,20 +97,21 @@ const generateTeamPreviousStats = (
   teams: TeamsSchema,
   tournament: TournamentSchema
 ): MatchStatisticsSchema[] => {
-  const shouldBeHomeTeam = faker.datatype.boolean()
-  // const filteredTeams = teams.filter(({ id }) => team.id !== id)
-  const randomTeamsIndex = randomTeamIndex(teams.length)
-  const oppositionTeam = teams[randomTeamsIndex]
+  const filteredTeams = teams.filter(({ id }) => team.id !== id)
 
   return Array(10)
     .fill(0)
     .map(() => {
+      const shouldBeHomeTeam = faker.datatype.boolean()
+      const randomTeamsIndex = randomTeamIndex(filteredTeams.length)
+      const oppositionTeam = teams[randomTeamsIndex]
+
       return {
         id: faker.datatype.uuid(),
         startTimestamp: new Date(faker.date.soon(0)).getTime(),
-        tournamentId: tournament.id,
-        homeTeamId: shouldBeHomeTeam ? team.id : oppositionTeam.id,
-        awayTeamId: !shouldBeHomeTeam ? team.id : oppositionTeam.id,
+        tournament,
+        homeTeam: shouldBeHomeTeam ? team : oppositionTeam,
+        awayTeam: !shouldBeHomeTeam ? team : oppositionTeam,
         matchStatistics: generateRecentGameStats(),
       }
     })

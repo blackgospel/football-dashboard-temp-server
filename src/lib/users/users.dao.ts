@@ -6,6 +6,7 @@ import {
   CreateUserDto,
   PatchUserDto,
   PutUserDto,
+  PutUserNoteDto,
 } from './users.dto'
 import { UserSchema } from './users.model'
 
@@ -90,6 +91,22 @@ class UsersDao {
     this.db.update(this.dbKey, userId, userFields)
 
     return userId
+  }
+
+  createOrUpdateContent(userId: string, userNoteFields: PutUserNoteDto) {
+    const formattedNote = {
+      id: userNoteFields.matchId,
+      content: userNoteFields.content,
+    }
+
+    this.db
+      .getConnection()
+      .get(this.dbKey)
+      .getById(userId)
+      .defaults({ notes: [{}] })
+      .get('notes')
+      .upsert(formattedNote)
+      .write()
   }
 }
 

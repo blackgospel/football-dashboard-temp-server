@@ -1,5 +1,14 @@
 import * as yup from 'yup'
 
+const userNotesSchema = yup
+  .array(
+    yup.object({
+      id: yup.string().defined(),
+      content: yup.string().defined(),
+    })
+  )
+  .optional()
+
 export const userSchema = yup
   .object({
     id: yup.string().defined(),
@@ -8,6 +17,7 @@ export const userSchema = yup
     avatar: yup.string().defined(),
     email: yup.string().email().defined(),
     password: yup.string().defined(),
+    notes: userNotesSchema,
   })
   .defined()
 

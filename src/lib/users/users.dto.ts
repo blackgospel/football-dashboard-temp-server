@@ -17,4 +17,9 @@ export interface PutUserDto {
   lastName: string
 }
 
+export interface PutUserNoteDto {
+  matchId: string
+  content: string
+}
+
 export interface PatchUserDto extends Partial<PutUserDto> {}

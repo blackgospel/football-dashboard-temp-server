@@ -1,6 +1,11 @@
 import { CRUD } from '../common/interfaces/crud.interface'
 import UsersDao from './users.dao'
-import { CreateUserDto, PatchUserDto, PutUserDto } from './users.dto'
+import {
+  CreateUserDto,
+  PatchUserDto,
+  PutUserDto,
+  PutUserNoteDto,
+} from './users.dto'
 
 class UsersService implements CRUD {
   async create(_resource: CreateUserDto) {
@@ -35,6 +40,10 @@ class UsersService implements CRUD {
 
   async getUserByEmailWithPassword(email: string) {
     return UsersDao.getUserByEmailWithPassword(email)
+  }
+
+  async editNote(id: string, resource: PutUserNoteDto) {
+    return UsersDao.createOrUpdateContent(id, resource)
   }
 }
 

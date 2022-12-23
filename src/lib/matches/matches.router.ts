@@ -14,6 +14,8 @@ export class MatchesRoutes extends CommonRoutesConfig {
       .get(MatchesController.listMatches)
       .post(MatchesController.createMatches)
 
+    this.router.route(`/matches/today`).get(MatchesController.listMatches)
+
     this.router.param(`matchId`, MatchesMiddleware.extractMatchId)
     this.router
       .route(`/matches/:matchId`)

@@ -1,13 +1,15 @@
 import * as yup from 'yup'
+import { teamSchema } from '../teams'
+import { tournamentSchema } from '../tournaments'
 
 const statsSchema = yup.array(yup.number()).length(2)
 
 const baseMatchSchema = yup.object({
   id: yup.string().defined(),
   startTimestamp: yup.number().defined(),
-  tournamentId: yup.string().defined(),
-  homeTeamId: yup.string().defined(),
-  awayTeamId: yup.string().defined(),
+  tournament: tournamentSchema,
+  homeTeam: teamSchema,
+  awayTeam: teamSchema,
 })
 
 const baseMatchStatisticsSchema = yup.object({

@@ -56,6 +56,16 @@ export class UsersRoutes extends CommonRoutesConfig {
       UsersController.patch,
     ])
 
+    this.router
+      .route(`/users/:userId/notes`)
+      .post(
+        body('matchId').isString(),
+        body('content').isString(),
+        BodyValidationMiddleware.verifyBodyFieldsErrors,
+        UsersMiddleware.validatePatchEmail,
+        UsersController.editNote
+      )
+
     return this.router
   }
 }
